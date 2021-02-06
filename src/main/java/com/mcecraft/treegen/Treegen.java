@@ -1,20 +1,26 @@
 package com.mcecraft.treegen;
 
-import com.mcecraft.treegen.utils.RandomUtils;
-import com.mcecraft.treegen.utils.Raytrace;
-import net.minestom.server.instance.batch.BlockBatch;
+import com.mcecraft.treegen.utils.*;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
 
 import java.util.List;
-import java.util.Random;
 
 public class Treegen {
 
-    public static Position placeRay(BlockBatch batch, Position startingPos, Block b, int length) {
+    public static Position placeRay(GenerationContext ctx, final Position startingPos, Block block, final int length) {
         List<Vector> positions = Raytrace.rayTrace(startingPos, 0.1, length*10);
+        return collectPosList(ctx.batch, positions, block);
+    }
+
+    public static Position placeRay(GenerationContext ctx, final Vector startingPos, final Vector direction, Block block, final int length) {
+        List<Vector> positions = Raytrace.rayTrace(startingPos, direction, 0.1, length*10);
+        return collectPosList(ctx.batch, positions, block);
+    }
+
+    private static Position collectPosList(final Batch batch, final List<Vector> positions, final Block b) {
         BlockPosition last = null;
         for (Vector vec : positions) {
             BlockPosition bpos = new BlockPosition(vec.getX(), vec.getY(), vec.getZ());
@@ -24,5 +30,67 @@ public class Treegen {
             }
         }
         return positions.get(positions.size()-1).toPosition();
+    }
+
+    public static void placeLeaves(GenerationContext ctx, BlockPosition bpos, Block leaf, int dist) {
+        if (dist <= 0) {
+            return;
+        }
+        ctx.batch.setBlock(bpos, leaf);
+        BlockPosition bpos2 = bpos.clone().add(1, 0, 0);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+        bpos2 = bpos.clone().add(-1, 0, 0);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+        bpos2 = bpos.clone().add(0, 1, 0);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+        bpos2 = bpos.clone().add(0, -1, 0);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+        bpos2 = bpos.clone().add(0, 0, 1);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+        bpos2 = bpos.clone().add(0, 0, -1);
+        if (ctx.rng.nextFloat() < 0.6 && !ctx.batch.hasBlockAt(bpos2)) {
+            placeLeaves(ctx, bpos2, leaf, dist - 1);
+        }
+    }
+
+    public static void placeCanopyRay(GenerationContext ctx, final Position startingPos, Block logBlock, Block leafBlock, final int length) {
+        List<Vector> positions = Raytrace.rayTrace(startingPos, 0.1, length*10);
+        BlockPosition last = startingPos.toBlockPosition();
+        for (Vector vec : positions) {
+            BlockPosition bpos = new BlockPosition(vec.getX(), vec.getY(), vec.getZ());
+            if (!bpos.equals(last)) {
+                ctx.batch.setBlockId(bpos, AxisBlock.placeOn(last.toPosition(), bpos.toPosition(), logBlock));
+                last = bpos;
+
+                if (ctx.rng.nextFloat() < 0.6) {
+                    placeLeaves(ctx, bpos.clone().add(0, 1, 0), leafBlock, 5);
+                }
+
+                //Should fork
+                if (ctx.rng.nextFloat() < 0.1 && length > 4) {
+                    Position pos = vec.toPosition();
+                    pos.setDirection(startingPos.getDirection());
+                    int difference = RandomUtils.randomIntBetween(ctx, 30, 70);
+                    difference = ctx.rng.nextBoolean() ? difference : -difference;
+
+                    pos.setYaw(pos.getYaw() + difference);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, length/2);
+
+                    pos.setYaw(pos.getYaw() - difference);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, length/2);
+                    break;
+                }
+            }
+        }
     }
 }

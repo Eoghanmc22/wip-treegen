@@ -1,9 +1,9 @@
 package com.mcecraft.treegen.test;
 
-import com.mcecraft.treegen.Treegen;
+import com.mcecraft.treegen.trees.LargeTree;
 import com.mcecraft.treegen.trees.PalmTree;
 import com.mcecraft.treegen.trees.Tree;
-import com.mcecraft.treegen.utils.RandomUtils;
+import com.mcecraft.treegen.utils.GenerationContext;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
@@ -49,17 +49,18 @@ public class Minestom {
            event.getPlayer().setGameMode(GameMode.CREATIVE);
         });
 
-        Tree testTree = new PalmTree();
+        Tree testTree = new LargeTree();
 
         globalEventHandler.addEventCallback(PlayerBlockPlaceEvent.class, event -> {
-            Random rng = new Random();
-            BlockBatch blockBatch = event.getPlayer().getInstance().createBlockBatch();
-            testTree.build(blockBatch, event.getBlockPosition(), rng);
-            blockBatch.flush(null);
+            if (event.getBlockStateId() == 1) {
+                GenerationContext ctx = new GenerationContext();
+                testTree.build(ctx);
+                ctx.complete(event.getPlayer().getInstance(), event.getBlockPosition());
+            }
         });
 
         // Start the server on port 25565
-        minecraftServer.start("localhost", 25565);
+        minecraftServer.start("localhost", 25566);
     }
 
     private static class GeneratorDemo implements ChunkGenerator {
