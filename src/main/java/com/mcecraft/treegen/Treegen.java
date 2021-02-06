@@ -76,18 +76,24 @@ public class Treegen {
                     placeLeaves(ctx, bpos.clone().add(0, 1, 0), leafBlock, 5);
                 }
 
+                if (ctx.rng.nextFloat() < 0.2) {
+                    placeLeaves(ctx, bpos.clone().add(0, -1, 0), leafBlock, 5);
+                }
+
                 //Should fork
-                if (ctx.rng.nextFloat() < 0.1 && length > 4) {
+                if (ctx.rng.nextFloat() < 0.2 && length > 4) {
                     Position pos = vec.toPosition();
                     pos.setDirection(startingPos.getDirection());
                     int difference = RandomUtils.randomIntBetween(ctx, 30, 70);
                     difference = ctx.rng.nextBoolean() ? difference : -difference;
 
+                    int len = length / 2;//(positions.size() - i)/20;
+
                     pos.setYaw(pos.getYaw() + difference);
-                    placeCanopyRay(ctx, pos, logBlock, leafBlock, length/2);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len);
 
                     pos.setYaw(pos.getYaw() - difference);
-                    placeCanopyRay(ctx, pos, logBlock, leafBlock, length/2);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len);
                     break;
                 }
             }

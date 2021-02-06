@@ -33,14 +33,14 @@ public class LargeTree extends Tree {
 		final Position position = Treegen.placeRay(ctx, focalPoint, Block.OAK_LOG, RandomUtils.randomIntBetween(ctx, 5, 12));
 
 
-		count = RandomUtils.randomIntBetween(ctx, 5, 8);
+		count = RandomUtils.randomIntBetween(ctx, 7, 10);
 		frac = 1.0/count;
 		degPer = 360*frac;
 
 		for (int i = 0; i < count; i++) {
 			position.setPitch(RandomUtils.randomIntBetween(ctx, 10, 20));
 			position.setYaw((float) (RandomUtils.randomDoubleBetween(ctx, 0, degPer) + degPer*i));
-			Treegen.placeCanopyRay(ctx, position, Block.OAK_WOOD, Block.OAK_LEAVES, RandomUtils.randomIntBetween(ctx, 10, 20));
+			Treegen.placeCanopyRay(ctx, position, Block.OAK_WOOD, Block.OAK_LEAVES, RandomUtils.randomIntBetween(ctx, 15, 25));
 		}
 	}
 
