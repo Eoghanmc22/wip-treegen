@@ -63,7 +63,7 @@ public class Treegen {
         }
     }
 
-    public static void placeCanopyRay(GenerationContext ctx, final Position startingPos, Block logBlock, Block leafBlock, final int length) {
+    public static void placeCanopyRay(final GenerationContext ctx, final Position startingPos, final Block logBlock, final Block leafBlock, final int length, final int leafSpread) {
         List<Vector> positions = Raytrace.rayTrace(startingPos, 0.1, length*10);
         BlockPosition last = startingPos.toBlockPosition();
         for (Vector vec : positions) {
@@ -73,11 +73,11 @@ public class Treegen {
                 last = bpos;
 
                 if (ctx.rng.nextFloat() < 0.6) {
-                    placeLeaves(ctx, bpos.clone().add(0, 1, 0), leafBlock, 5);
+                    placeLeaves(ctx, bpos.clone().add(0, 1, 0), leafBlock, leafSpread);
                 }
 
                 if (ctx.rng.nextFloat() < 0.2) {
-                    placeLeaves(ctx, bpos.clone().add(0, -1, 0), leafBlock, 5);
+                    placeLeaves(ctx, bpos.clone().add(0, -1, 0), leafBlock, leafSpread);
                 }
 
                 //Should fork
@@ -90,10 +90,10 @@ public class Treegen {
                     int len = length / 2;//(positions.size() - i)/20;
 
                     pos.setYaw(pos.getYaw() + difference);
-                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len, leafSpread);
 
                     pos.setYaw(pos.getYaw() - difference);
-                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len);
+                    placeCanopyRay(ctx, pos, logBlock, leafBlock, len, leafSpread);
                     break;
                 }
             }

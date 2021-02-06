@@ -40,7 +40,7 @@ public class LargeTree extends Tree {
 		for (int i = 0; i < count; i++) {
 			position.setPitch(RandomUtils.randomIntBetween(ctx, 10, 20));
 			position.setYaw((float) (RandomUtils.randomDoubleBetween(ctx, 0, degPer) + degPer*i));
-			Treegen.placeCanopyRay(ctx, position, Block.OAK_WOOD, Block.OAK_LEAVES, RandomUtils.randomIntBetween(ctx, 15, 25));
+			Treegen.placeCanopyRay(ctx, position, Block.OAK_WOOD, Block.OAK_LEAVES, RandomUtils.randomIntBetween(ctx, 15, 25), 5);
 		}
 	}
 

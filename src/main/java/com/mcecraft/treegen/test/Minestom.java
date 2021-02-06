@@ -1,6 +1,7 @@
 package com.mcecraft.treegen.test;
 
 import com.mcecraft.treegen.trees.LargeTree;
+import com.mcecraft.treegen.trees.MediumTree;
 import com.mcecraft.treegen.trees.PalmTree;
 import com.mcecraft.treegen.trees.Tree;
 import com.mcecraft.treegen.utils.GenerationContext;
@@ -49,7 +50,7 @@ public class Minestom {
            event.getPlayer().setGameMode(GameMode.CREATIVE);
         });
 
-        Tree testTree = new LargeTree();
+        Tree testTree = new MediumTree();
 
         globalEventHandler.addEventCallback(PlayerBlockPlaceEvent.class, event -> {
             if (event.getBlockStateId() == 1) {
