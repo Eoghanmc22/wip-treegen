@@ -1,12 +1,12 @@
 package com.mcecraft.treegen.trees;
 
 import com.mcecraft.treegen.Treegen;
-import com.mcecraft.treegen.utils.GenerationContext;
-import com.mcecraft.treegen.utils.RandomUtils;
-import com.mcecraft.treegen.utils.VectorUtils;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
+import net.minestom.worldgenUtils.GenerationContext;
+import net.minestom.worldgenUtils.RandomUtils;
+import net.minestom.worldgenUtils.VectorUtils;
 
 public class LargeTree extends Tree {
 

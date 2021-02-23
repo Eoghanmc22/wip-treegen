@@ -4,7 +4,6 @@ import com.mcecraft.treegen.trees.LargeTree;
 import com.mcecraft.treegen.trees.MediumTree;
 import com.mcecraft.treegen.trees.PalmTree;
 import com.mcecraft.treegen.trees.Tree;
-import com.mcecraft.treegen.utils.GenerationContext;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
@@ -18,6 +17,7 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.world.biomes.Biome;
+import net.minestom.worldgenUtils.GenerationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,9 +54,9 @@ public class Minestom {
 
         globalEventHandler.addEventCallback(PlayerBlockPlaceEvent.class, event -> {
             if (event.getBlockStateId() == 1) {
-                GenerationContext ctx = new GenerationContext();
+                GenerationContext ctx = new GenerationContext(event.getPlayer().getInstance());
                 testTree.build(ctx);
-                ctx.complete(event.getPlayer().getInstance(), event.getBlockPosition());
+                ctx.apply(event.getBlockPosition());
             }
         });
 

@@ -1,12 +1,11 @@
 package com.mcecraft.treegen.trees;
 
 import com.mcecraft.treegen.Treegen;
-import com.mcecraft.treegen.utils.Array2d;
-import com.mcecraft.treegen.utils.GenerationContext;
-import com.mcecraft.treegen.utils.Interpolation;
-import com.mcecraft.treegen.utils.RandomUtils;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
+import net.minestom.worldgenUtils.GenerationContext;
+import net.minestom.worldgenUtils.Interpolation;
+import net.minestom.worldgenUtils.RandomUtils;
 
 public class MediumTree extends Tree {
 

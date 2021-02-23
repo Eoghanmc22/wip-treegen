@@ -1,10 +1,10 @@
 package com.mcecraft.treegen;
 
-import com.mcecraft.treegen.utils.*;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
+import net.minestom.worldgenUtils.*;
 
 import java.util.List;
 

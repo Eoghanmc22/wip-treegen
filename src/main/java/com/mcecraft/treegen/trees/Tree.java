@@ -1,9 +1,8 @@
 package com.mcecraft.treegen.trees;
 
-import com.mcecraft.treegen.utils.Batch;
-import com.mcecraft.treegen.utils.GenerationContext;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;
+import net.minestom.worldgenUtils.GenerationContext;
 
 import java.util.Random;
 
