@@ -1,17 +1,14 @@
 package com.mcecraft.treegen.utils;
 
-import net.minestom.server.instance.Chunk;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;
 import net.minestom.server.utils.Position;
-import net.minestom.server.utils.chunk.ChunkUtils;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 
-import static com.mcecraft.treegen.utils.Batch.SimpleBlockData.block;
-import static com.mcecraft.treegen.utils.Batch.SimpleBlockPosition.at;
+import static com.mcecraft.treegen.utils.SimpleBlockPosition.at;
 
 
 /**
@@ -19,7 +16,7 @@ import static com.mcecraft.treegen.utils.Batch.SimpleBlockPosition.at;
  */
 public class Batch {
 
-	private final HashMap<SimpleBlockPosition, SimpleBlockData> data = new HashMap<>();
+	private final HashMap<SimpleChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> data = new HashMap<>();
 
 	public void setBlock(Position pos, Block b) {
 		setBlock((int)pos.getX(), (int)pos.getY(), (int)pos.getZ(), b);
@@ -30,8 +27,7 @@ public class Batch {
 	}
 
 	public void setBlock(int x, int y, int z, Block b) {
-		final SimpleBlockPosition at = at(x, y, z);
-		data.put(at, block(at, b));
+		setBlockId(x,y,z,b.getBlockId());
 	}
 
 	public void setBlockId(Position pos, short b) {
@@ -44,7 +40,16 @@ public class Batch {
 
 	public void setBlockId(int x, int y, int z, short b) {
 		final SimpleBlockPosition at = at(x, y, z);
-		data.put(at, block(at, b));
+		final SimpleChunkPos chunk = at.getChunk();
+		HashMap<SimpleBlockPosition, SimpleBlockData> chunkData;
+		if (data.containsKey(chunk)) {
+			chunkData = data.get(chunk);
+			chunkData.put(at, new SimpleBlockData(x,y,z,b));
+		} else {
+			chunkData = new HashMap<>();
+			chunkData.put(at, new SimpleBlockData(x,y,z,b));
+			data.put(chunk, chunkData);
+		}
 	}
 
 	public boolean hasBlockAt(Position pos) {
@@ -56,7 +61,8 @@ public class Batch {
 	}
 
 	public boolean hasBlockAt(int x, int y, int z) {
-		return data.containsKey(at(x, y, z));
+		final SimpleBlockPosition at = at(x, y, z);
+		return data.containsKey(at.getChunk()) && data.get(at.getChunk()).containsKey(at);
 	}
 
 	public short getBlockIdAt(Position pos) {
@@ -68,7 +74,14 @@ public class Batch {
 	}
 
 	public short getBlockIdAt(int x, int y, int z) {
-		return data.get(at(x, y, z)).blockStateId;
+		final SimpleBlockPosition at = at(x, y, z);
+		if (data.containsKey(at.getChunk())) {
+			HashMap<SimpleBlockPosition, SimpleBlockData> data = this.data.get(at.getChunk());
+			if (data.containsKey(at)) {
+				return data.get(at).blockStateId;
+			}
+		}
+		return 0;
 	}
 
 	public Block getBlockAt(Position pos) {
@@ -84,128 +97,22 @@ public class Batch {
 	}
 
 	public void apply(Instance instance, BlockPosition offset) {
-		HashSet<SimpleChunkPos> chunks = new HashSet<>();
-		for (final SimpleBlockData data : this.data.values()) {
-			data.apply(instance, chunks, offset.getX(), offset.getY(), offset.getZ());
-		}
-		for (final SimpleChunkPos cPos : chunks) {
-			cPos.refreshChunk(instance);
+		for (final Map.Entry<SimpleChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> chunkdata : this.data.entrySet()) {
+			Batch.applyChunk(instance, offset, chunkdata.getKey(), chunkdata.getValue());
 		}
 	}
 
-	public HashMap<SimpleBlockPosition, SimpleBlockData> getData() {
+	public static void applyChunk(Instance instance, BlockPosition offset, SimpleChunkPos cpos, HashMap<SimpleBlockPosition, SimpleBlockData> data) {
+		if (cpos.getChunk(instance).isLoaded()) {
+			for (final SimpleBlockData bd : data.values()) {
+				bd.apply(instance, offset.getX(), offset.getY(), offset.getZ());
+			}
+			cpos.getChunk(instance).sendChunk();
+		}
+	}
+
+	public HashMap<SimpleChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> getData() {
 		return data;
 	}
 
-	public static class SimpleBlockData {
-
-		public static SimpleBlockData block(SimpleBlockPosition pos, Block b) {
-			return new SimpleBlockData(pos, b.getBlockId());
-		}
-
-		public static SimpleBlockData block(SimpleBlockPosition pos, short b) {
-			return new SimpleBlockData(pos, b);
-		}
-
-		public final int x, y, z;
-		public final short blockStateId;
-
-		public SimpleBlockData(SimpleBlockPosition pos, short blockStateId) {
-			this.x = pos.x;
-			this.y = pos.y;
-			this.z = pos.z;
-			this.blockStateId = blockStateId;
-		}
-
-		public SimpleBlockData(int x, int y, int z, short blockStateId) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.blockStateId = blockStateId;
-		}
-
-		public void apply(Instance instance, HashSet<SimpleChunkPos> chunks, int xOffset, int yOffset, int zOffset) {
-			int rX = x+xOffset;
-			int rY = y+yOffset;
-			int rZ = z+zOffset;
-			final Chunk chunk = instance.getChunkAt(rX, rZ);
-			if (ChunkUtils.isLoaded(chunk)) {
-				synchronized (chunk) {
-					chunk.UNSAFE_setBlock(rX, rY, rZ, blockStateId, (short) 0, null, false);
-					chunks.add(new SimpleChunkPos(chunk.getChunkX(), chunk.getChunkZ()));
-				}
-			}
-		}
-	}
-
-	public static class SimpleChunkPos {
-
-		public final int chunkX, chunkZ;
-
-		public SimpleChunkPos(int chunkX, int chunkZ) {
-			this.chunkX = chunkX;
-			this.chunkZ = chunkZ;
-		}
-
-		public void refreshChunk(Instance instance) {
-			final Chunk chunk = instance.getChunk(chunkX, chunkZ);
-			if (chunk != null) {
-				chunk.sendChunk();
-			}
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			SimpleChunkPos that = (SimpleChunkPos) o;
-
-			if (chunkX != that.chunkX) return false;
-			return chunkZ == that.chunkZ;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = chunkX;
-			result = 31 * result + chunkZ;
-			return result;
-		}
-	}
-
-	public static class SimpleBlockPosition {
-
-		public static SimpleBlockPosition at(int x, int y, int z) {
-			return new SimpleBlockPosition(x,y,z);
-		}
-
-		public final int x,y,z;
-
-		public SimpleBlockPosition(int x, int y, int z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			SimpleBlockPosition that = (SimpleBlockPosition) o;
-
-			if (x != that.x) return false;
-			if (y != that.y) return false;
-			return z == that.z;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = x;
-			result = 31 * result + y;
-			result = 31 * result + z;
-			return result;
-		}
-
-	}
 }
