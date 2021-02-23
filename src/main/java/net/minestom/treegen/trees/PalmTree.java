@@ -1,12 +1,10 @@
-package com.mcecraft.treegen.trees;
+package net.minestom.treegen.trees;
 
-import com.mcecraft.treegen.Treegen;
+import net.minestom.treegen.Treegen;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.worldgenUtils.GenerationContext;
 import net.minestom.worldgenUtils.RandomUtils;
-
-import java.util.Random;
 
 public class PalmTree extends Tree{
 

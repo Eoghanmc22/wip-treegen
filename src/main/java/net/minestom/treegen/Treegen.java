@@ -1,4 +1,4 @@
-package com.mcecraft.treegen;
+package net.minestom.treegen;
 
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;

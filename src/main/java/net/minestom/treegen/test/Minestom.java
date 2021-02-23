@@ -1,9 +1,7 @@
-package com.mcecraft.treegen.test;
+package net.minestom.treegen.test;
 
-import com.mcecraft.treegen.trees.LargeTree;
-import com.mcecraft.treegen.trees.MediumTree;
-import com.mcecraft.treegen.trees.PalmTree;
-import com.mcecraft.treegen.trees.Tree;
+import net.minestom.treegen.trees.MediumTree;
+import net.minestom.treegen.trees.Tree;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
@@ -12,7 +10,6 @@ import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.*;
-import net.minestom.server.instance.batch.BlockBatch;
 import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
@@ -21,7 +18,6 @@ import net.minestom.worldgenUtils.GenerationContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 
 public class Minestom {

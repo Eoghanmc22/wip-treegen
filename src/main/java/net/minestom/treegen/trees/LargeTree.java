@@ -1,6 +1,6 @@
-package com.mcecraft.treegen.trees;
+package net.minestom.treegen.trees;
 
-import com.mcecraft.treegen.Treegen;
+import net.minestom.treegen.Treegen;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
