@@ -1,20 +1,20 @@
 package net.minestom.treegen.trees;
 
+import net.minestom.treegen.TreeGenerationContext;
 import net.minestom.treegen.Treegen;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
-import net.minestom.worldgenUtils.GenerationContext;
 import net.minestom.worldgenUtils.RandomUtils;
 import net.minestom.worldgenUtils.VectorUtils;
 
 public class LargeTree extends Tree {
 
 	@Override
-	public void build(GenerationContext ctx) {
-		final Position focalPoint = ctx.origin.clone().add(0.5, 5, 0.5);
+	public void build(TreeGenerationContext ctx) {
+		final Position focalPoint = new Position(0.5, 5, 0.5);
 
-		final Position center = ctx.origin.clone().subtract(0, 3, 0);
+		final Position center = new Position(0, -3, 0);
 
 		int count = RandomUtils.randomIntBetween(ctx, 3, 6);
 		double frac = 1.0/count;

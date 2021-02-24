@@ -1,12 +1,8 @@
 package net.minestom.treegen.trees;
 
-import net.minestom.server.instance.block.Block;
-import net.minestom.server.utils.BlockPosition;
-import net.minestom.worldgenUtils.GenerationContext;
-
-import java.util.Random;
+import net.minestom.treegen.TreeGenerationContext;
 
 public abstract class Tree {
 
-    public abstract void build(GenerationContext ctx);
+    public abstract void build(TreeGenerationContext ctx);
 }

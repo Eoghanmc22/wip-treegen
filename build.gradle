@@ -14,5 +14,5 @@ repositories {
 
 dependencies {
     implementation 'com.github.Minestom:Minestom:8a992b3e45'
-    implementation 'com.github.Eoghanmc22:worldgen-commons:8303e05b38'
+    implementation 'com.github.Eoghanmc22:worldgen-commons:3403abb36a'
 }

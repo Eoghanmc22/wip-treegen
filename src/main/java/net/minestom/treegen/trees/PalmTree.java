@@ -1,16 +1,16 @@
 package net.minestom.treegen.trees;
 
+import net.minestom.treegen.TreeGenerationContext;
 import net.minestom.treegen.Treegen;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
-import net.minestom.worldgenUtils.GenerationContext;
 import net.minestom.worldgenUtils.RandomUtils;
 
 public class PalmTree extends Tree{
 
     @Override
-    public void build(GenerationContext ctx) {
-        Position position = ctx.origin;
+    public void build(TreeGenerationContext ctx) {
+        Position position = new Position();
 
         //Place trunk
         position.setPitch(-RandomUtils.randomIntBetween(ctx, 45, 80));

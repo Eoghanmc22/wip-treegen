@@ -1,16 +1,16 @@
 package net.minestom.treegen.trees;
 
+import net.minestom.treegen.TreeGenerationContext;
 import net.minestom.treegen.Treegen;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Position;
-import net.minestom.worldgenUtils.GenerationContext;
 import net.minestom.worldgenUtils.Interpolation;
 import net.minestom.worldgenUtils.RandomUtils;
 
 public class MediumTree extends Tree {
 
 	@Override
-	public void build(GenerationContext ctx) {
+	public void build(TreeGenerationContext ctx) {
 		// base will be 9x9
 		double _00 = RandomUtils.randomDoubleBetween(ctx, -1.2, 1);
 		double _01 = RandomUtils.randomDoubleBetween(ctx, 0, 1);
@@ -50,7 +50,7 @@ public class MediumTree extends Tree {
 		}
 	}
 
-	public static void placeRoots(GenerationContext ctx, double v, int x, int y, int z, Block log, Block slab) {
+	public static void placeRoots(TreeGenerationContext ctx, double v, int x, int y, int z, Block log, Block slab) {
 		if (v < 0) {
 			return;
 		}

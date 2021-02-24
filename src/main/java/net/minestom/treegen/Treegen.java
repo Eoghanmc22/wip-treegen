@@ -10,12 +10,12 @@ import java.util.List;
 
 public class Treegen {
 
-    public static Position placeRay(GenerationContext ctx, final Position startingPos, Block block, final int length) {
+    public static Position placeRay(TreeGenerationContext ctx, final Position startingPos, Block block, final int length) {
         List<Vector> positions = Raytrace.rayTrace(startingPos, 0.1, length*10);
         return collectPosList(ctx.batch, positions, block);
     }
 
-    public static Position placeRay(GenerationContext ctx, final Vector startingPos, final Vector direction, Block block, final int length) {
+    public static Position placeRay(TreeGenerationContext ctx, final Vector startingPos, final Vector direction, Block block, final int length) {
         List<Vector> positions = Raytrace.rayTrace(startingPos, direction, 0.1, length*10);
         return collectPosList(ctx.batch, positions, block);
     }
@@ -32,7 +32,7 @@ public class Treegen {
         return positions.get(positions.size()-1).toPosition();
     }
 
-    public static void placeLeaves(GenerationContext ctx, BlockPosition bpos, Block leaf, int dist) {
+    public static void placeLeaves(TreeGenerationContext ctx, BlockPosition bpos, Block leaf, int dist) {
         if (dist <= 0) {
             return;
         }
@@ -63,7 +63,7 @@ public class Treegen {
         }
     }
 
-    public static void placeCanopyRay(final GenerationContext ctx, final Position startingPos, final Block logBlock, final Block leafBlock, final int length, final int leafSpread) {
+    public static void placeCanopyRay(final TreeGenerationContext ctx, final Position startingPos, final Block logBlock, final Block leafBlock, final int length, final int leafSpread) {
         List<Vector> positions = Raytrace.rayTrace(startingPos, 0.1, length*10);
         BlockPosition last = startingPos.toBlockPosition();
         for (Vector vec : positions) {
